@@ -3,6 +3,7 @@ import Blog from './components/blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import LoginForm from './components/loginform';
+import UserInfo from './components/userinfo';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class App extends React.Component {
 
   componentWillMount() {
     blogService.getAll().then(blogs => this.setState({ blogs }));
-    const user = window.localStorage.getItem('used');
+    const user = window.localStorage.getItem('user');
 
     if (user) {
       const parsedUser = JSON.parse(user);
@@ -40,11 +41,22 @@ class App extends React.Component {
     }
   };
 
+  logout = () => {
+    window.localStorage.removeItem('user');
+    blogService.removeToken();
+    this.setState({ user: null });
+  };
+
   render() {
     const { user } = this.state;
+
+    if (!user) {
+      return <LoginForm onSubmit={this.login} />;
+    }
+
     return (
       <div>
-        {user ? user.username : <LoginForm onSubmit={this.login} />}
+        <UserInfo name={user.username} onLogout={this.logout} />
         <h2>blogs</h2>
         {this.state.blogs.map(blog => <Blog key={blog._id} blog={blog} />)}
       </div>
