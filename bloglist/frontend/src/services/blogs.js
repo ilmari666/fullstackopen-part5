@@ -4,19 +4,24 @@ const baseUrl = '/api/blogs';
 let token = null;
 
 const getAll = async () => {
-  const request = axios.get(baseUrl);
-  return request.then(response => response.data);
-
-  //  const response = await axios.get(baseUrl);
-  //  return response.data;
+  try {
+    const response = await axios.get(baseUrl);
+    return response;
+  } catch ({ response }) {
+    return response;
+  }
 };
 
 const create = async blogObj => {
   const config = {
     headers: { Authorization: token }
   };
-  const response = await axios.post(baseUrl, blogObj, config);
-  return response.data;
+  try {
+    const response = await axios.post(baseUrl, blogObj, config);
+    return response;
+  } catch ({ response }) {
+    return response;
+  }
 };
 
 const setToken = receivedToken => {
