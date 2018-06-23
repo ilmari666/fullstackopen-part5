@@ -11,8 +11,16 @@ const getAll = async () => {
   //  return response.data;
 };
 
+const create = async blogObj => {
+  const config = {
+    headers: { Authorization: token }
+  };
+  const response = await axios.post(baseUrl, blogObj, config);
+  return response.data;
+};
+
 const setToken = receivedToken => {
-  token = receivedToken;
+  token = `Bearer ${receivedToken}`;
   return token;
 };
 
@@ -20,4 +28,4 @@ const removeToken = () => {
   token = null;
 };
 
-export default { getAll, setToken, removeToken };
+export default { create, getAll, setToken, removeToken };
