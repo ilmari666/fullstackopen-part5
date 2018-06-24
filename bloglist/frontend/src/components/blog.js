@@ -1,5 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 import Toggleable from './toggleable';
+
+const BlogWrapper = styled.div`
+  border-style: solid;
+  width: 100%;
+`;
 
 class Blog extends React.Component {
   constructor(props) {
@@ -13,28 +19,31 @@ class Blog extends React.Component {
   };
 
   onLiked = e => {
+    // this is terrible
     e.preventDefault();
-    this.props.onLiked(this.props.id);
-    this.setState({ likes: this.state.likes + 1 });
+    const likes = this.state.likes;
+    const { url, author, user, title, id } = this.props;
+    this.props.onLiked({ likes, url, author, user, title, id });
+    this.setState({ likes: likes + 1 });
   };
 
   render() {
-    const { title, author, url, likes, id, user } = this.props;
+    const { title, author, url, user } = this.props;
     const username = user ? user.username : '';
     return (
-      <div>
+      <BlogWrapper>
         <div onClick={this.toggleContent}>
           {title} {author}
         </div>
         <Toggleable ref={ref => (this.content = ref)}>
           <React.Fragment>
-            <a href={url}>{url}</a>
-            added by {username}
-            {this.state.likes} likes{' '}
+            URL: <a href={url}>{url}</a> <br />
+            Created by: {username} <br />
+            {this.state.likes} likes
             <button onClick={this.onLiked}>Like</button>
           </React.Fragment>
         </Toggleable>
-      </div>
+      </BlogWrapper>
     );
   }
 }

@@ -68,6 +68,22 @@ class App extends React.Component {
     this.notify(`Hope to see you soon again, ${user.username}.`);
   };
 
+  // should have its own get interface /api/blogs/:id/like
+  like = async blog => {
+    const { id, likes } = blog;
+    const blogData = {
+      likes: likes + 1
+    };
+    const response = await blogService.update(id, blogData);
+    if (response.status !== 200) {
+      return this.notifyError(response);
+    }
+    const updatedBlogs = this.state.blogs.concat();
+    const blogToUpdate = updatedBlogs.find(blog => blog.id === id);
+    blogToUpdate.likes = response.data.likes;
+    this.setState({ blogs: updatedBlogs });
+  };
+
   newBlog = async blog => {
     if (!(blog.title && blog.url)) {
       return this.notifyError('Please fill blog title and URL');
@@ -95,15 +111,11 @@ class App extends React.Component {
         </div>
       );
     }
-
     return (
       <div>
         <Notification message={message} />
         <UserInfo name={user.username} onLogout={this.logout} />
-        <Blogs
-          blogs={this.state.blogs}
-          onLiked={id => console.log('like', id)}
-        />
+        <Blogs blogs={this.state.blogs} onLiked={this.like} />
         <Toggleable
           showLabel="New Blog"
           hideLabel="Cancel"
