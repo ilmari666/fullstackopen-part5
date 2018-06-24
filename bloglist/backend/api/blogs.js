@@ -73,17 +73,17 @@ blogsRouter.put('/:id', async (request, response) => {
 });
 
 blogsRouter.delete('/:id', async (request, response) => {
-  const token = request.token;
-  if (!(token && token.id)) {
-    return response.status(401).json({ error: 'invalid or missing token' });
-  }
   const id = request.params.id;
   try {
     const blog = await Blog.findById(id);
     if (!blog) {
       return response.status(404).json({ error: 'not found' });
     }
-    if (!blog.user.toString() === token.id) {
+    const token = request.token;
+    if (!(token && token.id)) {
+      return response.status(401).json({ error: 'invalid or missing token' });
+    }
+    if (blog.user && !blog.user.toString() === token.id) {
       return response.status(401).json({ error: 'unauthorized' });
     }
     blog.remove();

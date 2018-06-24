@@ -3,6 +3,7 @@ import Blogs from './components/blogs';
 import BlogForm from './components/blogform';
 import blogService from './services/blogs';
 import loginService from './services/login';
+import UserContext from './contexts/user';
 import LoginForm from './components/loginform';
 import UserInfo from './components/userinfo';
 import Notification from './components/notification';
@@ -24,6 +25,7 @@ class App extends React.Component {
       return this.notifyError(response);
     }
     const { data: blogs } = response;
+    blogs.sort((a, b) => a.likes < b.likes);
     this.setState({ blogs });
     const user = window.localStorage.getItem('user');
 
@@ -81,8 +83,13 @@ class App extends React.Component {
     const updatedBlogs = this.state.blogs.concat();
     const blogToUpdate = updatedBlogs.find(blog => blog.id === id);
     blogToUpdate.likes = response.data.likes;
-    this.setState({ blogs: updatedBlogs });
+    this.updateBlogs(updatedBlogs);
   };
+
+  updateBlogs(newBlogs) {
+    newBlogs.sort((a, b) => a.likes < b.likes);
+    this.setState({ blogs: newBlogs });
+  }
 
   newBlog = async blog => {
     if (!(blog.title && blog.url)) {
@@ -101,6 +108,16 @@ class App extends React.Component {
     this.setState({ blogs: updatedBlogs });
   };
 
+  deleteBlog = blog => {
+    const { title, author, id } = blog;
+    const message = `Are you sure you want to delete ${title} by ${author}?`;
+    if (window.confirm(message)) {
+      blogService.remove(id);
+      const updatedBlogs = this.state.blogs.filter(blog => blog.id !== id);
+      this.updateBlogs(updatedBlogs);
+    }
+  };
+
   render() {
     const { user, message } = this.state;
     if (!user) {
@@ -113,17 +130,23 @@ class App extends React.Component {
     }
     return (
       <div>
-        <Notification message={message} />
-        <UserInfo name={user.username} onLogout={this.logout} />
-        <Blogs blogs={this.state.blogs} onLiked={this.like} />
-        <Toggleable
-          showLabel="New Blog"
-          hideLabel="Cancel"
-          ref={ref => (this.blogForm = ref)}
-          controls
-        >
-          <BlogForm onSubmit={this.newBlog} />
-        </Toggleable>
+        <UserContext.Provider value={user}>
+          <Notification message={message} />
+          <UserInfo name={user.username} onLogout={this.logout} />
+          <Blogs
+            blogs={this.state.blogs}
+            onLiked={this.like}
+            onDelete={this.deleteBlog}
+          />
+          <Toggleable
+            showLabel="New Blog"
+            hideLabel="Cancel"
+            ref={ref => (this.blogForm = ref)}
+            controls
+          >
+            <BlogForm onSubmit={this.newBlog} />
+          </Toggleable>
+        </UserContext.Provider>
       </div>
     );
   }

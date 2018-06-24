@@ -1,4 +1,5 @@
 import React from 'react';
+import UserContext from '../contexts/user';
 
 const wrapCallback = callback => {
   return e => {
@@ -8,10 +9,12 @@ const wrapCallback = callback => {
 };
 
 const UserInfo = props => {
-  const { onLogout, name } = props;
+  const { onLogout } = props;
   return (
     <div>
-      Welcome, {name}
+      <UserContext.Consumer>
+        {user => `Welcome, ${user.name}`}
+      </UserContext.Consumer>
       <button onClick={wrapCallback(onLogout)}>Logout</button>
     </div>
   );

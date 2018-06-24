@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Toggleable from './toggleable';
+import UserContext from '../contexts/user';
 
 const BlogWrapper = styled.div`
   border-style: solid;
@@ -27,6 +28,11 @@ class Blog extends React.Component {
     this.setState({ likes: likes + 1 });
   };
 
+  onDelete = e => {
+    e.preventDefault();
+    const { author, user, title, id } = this.props;
+    this.props.onDelete({ author, user, title, id });
+  };
   render() {
     const { title, author, url, user } = this.props;
     const username = user ? user.username : '';
@@ -41,6 +47,13 @@ class Blog extends React.Component {
             Created by: {username} <br />
             {this.state.likes} likes
             <button onClick={this.onLiked}>Like</button>
+            <UserContext.Consumer>
+              {loggedInUser => {
+                return !user || user.username === loggedInUser.username ? (
+                  <button onClick={this.onDelete}>Delete</button>
+                ) : null;
+              }}
+            </UserContext.Consumer>
           </React.Fragment>
         </Toggleable>
       </BlogWrapper>
