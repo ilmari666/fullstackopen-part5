@@ -6,6 +6,7 @@ import loginService from './services/login';
 import LoginForm from './components/loginform';
 import UserInfo from './components/userinfo';
 import Notification from './components/notification';
+import Toggleable from './components/toggleable';
 
 class App extends React.Component {
   constructor(props) {
@@ -75,11 +76,17 @@ class App extends React.Component {
     if (response.status !== 201) {
       return this.notifyError(response);
     }
+
     this.notify(`Added "${blog.title}" by ${blog.author} successfully`);
+    this.blogForm.hide();
+
+    const newBlog = response.data;
+    const updatedBlogs = this.state.blogs.concat(newBlog);
+    this.setState({ blogs: updatedBlogs });
   };
 
   render() {
-    const { user, message, showBlogForm } = this.state;
+    const { user, message } = this.state;
     if (!user) {
       return (
         <div>
@@ -88,26 +95,23 @@ class App extends React.Component {
         </div>
       );
     }
-    const shownWhenFormVisible = { display: showBlogForm ? '' : 'none' };
-    const hiddenWhenFormVisible = { display: showBlogForm ? 'none' : '' };
 
     return (
       <div>
         <Notification message={message} />
         <UserInfo name={user.username} onLogout={this.logout} />
-        <Blogs blogs={this.state.blogs} />
-        <button
-          style={hiddenWhenFormVisible}
-          onClick={() => this.setState({ showBlogForm: true })}
+        <Blogs
+          blogs={this.state.blogs}
+          onLiked={id => console.log('like', id)}
+        />
+        <Toggleable
+          showLabel="New Blog"
+          hideLabel="Cancel"
+          ref={ref => (this.blogForm = ref)}
+          controls
         >
-          New blog
-        </button>
-        <div style={shownWhenFormVisible}>
           <BlogForm onSubmit={this.newBlog} />
-          <button onClick={() => this.setState({ showBlogForm: false })}>
-            Cancel
-          </button>
-        </div>
+        </Toggleable>
       </div>
     );
   }
