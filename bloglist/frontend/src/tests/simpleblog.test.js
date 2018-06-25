@@ -11,8 +11,8 @@ describe.only('<SimpleBlog />', () => {
     };
 
     const component = shallow(<SimpleBlog blog={blog} onClick={null} />);
-    const contentDiv = component.find('.blogHeader');
+    const titleDiv = component.find('.blogHeader');
 
-    expect(contentDiv.text()).toContain(blog.title);
+    expect(titleDiv.text()).toContain(blog.title);
   });
 });

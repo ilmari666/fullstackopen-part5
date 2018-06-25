@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Toggleable from './toggleable';
-import UserContext from '../contexts/user';
 
 const BlogWrapper = styled.div`
   border-style: solid;
@@ -15,7 +14,7 @@ class Blog extends React.Component {
   }
 
   toggleContent = e => {
-    e.preventDefault();
+    e ? e.preventDefault() : null;
     this.content.toggle();
   };
 
@@ -38,22 +37,21 @@ class Blog extends React.Component {
     const username = user ? user.username : '';
     return (
       <BlogWrapper>
-        <div onClick={this.toggleContent}>
+        <div className="blogHeader" onClick={this.toggleContent.bind(this)}>
           {title} {author}
         </div>
+
         <Toggleable ref={ref => (this.content = ref)}>
           <React.Fragment>
-            URL: <a href={url}>{url}</a> <br />
-            Created by: {username} <br />
-            {this.state.likes} likes
-            <button onClick={this.onLiked}>Like</button>
-            <UserContext.Consumer>
-              {loggedInUser => {
-                return !user || user.username === loggedInUser.username ? (
-                  <button onClick={this.onDelete}>Delete</button>
-                ) : null;
-              }}
-            </UserContext.Consumer>
+            <div className="blogInfo">
+              URL: <a href={url}>{url}</a> <br />
+              Created by: {username} <br />
+              {this.state.likes} likes
+              <button onClick={this.onLiked}>Like</button>
+            </div>
+            {!user || user.username === props.user.username ? (
+              <button onClick={this.onDelete}>Delete</button>
+            ) : null}
           </React.Fragment>
         </Toggleable>
       </BlogWrapper>
