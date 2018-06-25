@@ -1,5 +1,5 @@
 import React from 'react';
-//import { func } from 'prop-types';
+import { func, arrayOf, shape, string } from 'prop-types';
 
 class Form extends React.Component {
   constructor(props) {
@@ -61,5 +61,16 @@ class Form extends React.Component {
     );
   }
 }
+
+Form.propTypes = {
+  fields: arrayOf(
+    shape({
+      type: string,
+      name: string
+    })
+  ),
+  buttonLabel: string,
+  onSubmit: func
+};
 
 export default Form;
