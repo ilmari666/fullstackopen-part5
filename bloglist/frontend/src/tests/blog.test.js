@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import Blog from '../components/blog';
 
 const dummyBlog = {
@@ -13,14 +13,14 @@ const dummyBlog = {
 
 describe('<Blog />', () => {
   it('renders title', () => {
-    const component = mount(<Blog {...dummyBlog} onClick={null} />);
+    const component = shallow(<Blog {...dummyBlog} onClick={null} />);
     const titleDiv = component.find('.blogHeader');
     expect(titleDiv.text()).toContain(dummyBlog.title);
   });
 
   it('blog details are not rendered until header is clicked', () => {
     const mockHandler = jest.fn();
-    const component = mount(<Blog {...dummyBlog} onLiked={mockHandler} />);
+    const component = shallow(<Blog {...dummyBlog} onLiked={mockHandler} />);
 
     const initialContentDiv = component.find('.blogInfo');
     expect(initialContentDiv.length).toBe(0); // no content

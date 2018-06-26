@@ -14,7 +14,9 @@ class Blog extends React.Component {
   }
 
   toggleContent = e => {
-    e ? e.preventDefault() : null;
+    if (e) {
+      e.preventDefault();
+    }
     this.content.toggle();
   };
 
@@ -49,7 +51,7 @@ class Blog extends React.Component {
               {this.state.likes} likes
               <button onClick={this.onLiked}>Like</button>
             </div>
-            {!user || user.username === props.user.username ? (
+            {!user || username === this.props.loggedInUser.username ? (
               <button onClick={this.onDelete}>Delete</button>
             ) : null}
           </React.Fragment>

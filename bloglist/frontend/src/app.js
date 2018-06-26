@@ -3,7 +3,6 @@ import Blogs from './components/blogs';
 import BlogForm from './components/blogform';
 import blogService from './services/blogs';
 import loginService from './services/login';
-import UserContext from './contexts/user';
 import LoginForm from './components/loginform';
 import UserInfo from './components/userinfo';
 import Notification from './components/notification';
@@ -28,7 +27,6 @@ class App extends React.Component {
     blogs.sort((a, b) => a.likes < b.likes);
     this.setState({ blogs });
     const user = window.localStorage.getItem('user');
-
     if (user) {
       const parsedUser = JSON.parse(user);
       this.setState({ user: parsedUser });
@@ -130,23 +128,22 @@ class App extends React.Component {
     }
     return (
       <div>
-        <UserContext.Provider value={user}>
-          <Notification message={message} />
-          <UserInfo name={user.username} onLogout={this.logout} />
-          <Blogs
-            blogs={this.state.blogs}
-            onLiked={this.like}
-            onDelete={this.deleteBlog}
-          />
-          <Toggleable
-            showLabel="New Blog"
-            hideLabel="Cancel"
-            ref={ref => (this.blogForm = ref)}
-            controls
-          >
-            <BlogForm onSubmit={this.newBlog} />
-          </Toggleable>
-        </UserContext.Provider>
+        <Notification message={message} />
+        <UserInfo username={user.username} onLogout={this.logout} />
+        <Blogs
+          user={user}
+          blogs={this.state.blogs}
+          onLiked={this.like}
+          onDelete={this.deleteBlog}
+        />
+        <Toggleable
+          showLabel="New Blog"
+          hideLabel="Cancel"
+          ref={ref => (this.blogForm = ref)}
+          controls
+        >
+          <BlogForm onSubmit={this.newBlog} />
+        </Toggleable>
       </div>
     );
   }
