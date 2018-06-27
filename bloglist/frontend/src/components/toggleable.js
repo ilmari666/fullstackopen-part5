@@ -26,7 +26,7 @@ class Toggleable extends React.Component {
     const { children, controls } = this.props;
     return (
       <div>
-        {displayContent ? children : null}
+        <div>{displayContent ? children : null}</div>
         {controls ? this.createControls() : null}
       </div>
     );

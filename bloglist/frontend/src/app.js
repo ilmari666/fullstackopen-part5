@@ -43,7 +43,11 @@ class App extends React.Component {
     if (typeof response === 'string') {
       this.notify({ error: response });
     } else {
-      this.notify({ error: response.data.error || response.statusText });
+      const err =
+        response.data && response.data.error
+          ? response.data.error
+          : response.statusText;
+      this.notify({ error: err || '' });
     }
   }
 

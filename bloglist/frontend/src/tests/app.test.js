@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import App from '../app';
-import Blog from '../components/blogs';
+import Blog from '../components/blog';
 jest.mock('../services/blogs');
 import blogService from '../services/blogs';
 
@@ -29,14 +29,12 @@ describe('<App /> authenticated', () => {
     };
     window.localStorage.clear();
     window.localStorage.setItem('user', JSON.stringify(user));
-
     app = mount(<App />);
   });
 
   it('renders blogs for authenticated users', () => {
     app.update();
-    console.log(app.debug());
-    const blogComponent = app.find(Blog);
-    expect(blogComponent.length).toEqual(blogService.blogs.length);
+    const blogComponents = app.find(Blog);
+    expect(blogComponents.length).toEqual(blogService.blogs.length);
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount, render } from 'enzyme';
 import Blog from '../components/blog';
 
 const dummyBlog = {
@@ -18,18 +18,21 @@ describe('<Blog />', () => {
     expect(titleDiv.text()).toContain(dummyBlog.title);
   });
 
-  it('blog details are not rendered until header is clicked', () => {
+  it('blog details are not rendered initially', () => {
     const mockHandler = jest.fn();
-    const component = shallow(<Blog {...dummyBlog} onLiked={mockHandler} />);
+    const component = mount(<Blog {...dummyBlog} onLiked={mockHandler} />);
+    const infoElement = component.find('.blogInfo');
+    expect(infoElement.length).toBe(0);
+  });
 
-    const initialContentDiv = component.find('.blogInfo');
-    expect(initialContentDiv.length).toBe(0); // no content
-
-    const titleDiv = component.find('.blogHeader');
-    titleDiv.simulate('click');
-    const contentDiv = component.find('.blogInfo');
-    expect(contentDiv.length).toBe(1);
-    expect(contentDiv.text()).toContain('likes');
+  it('blog details are rendered after clicking the header', () => {
+    const mockHandler = jest.fn();
+    const component = mount(<Blog {...dummyBlog} onLiked={mockHandler} />);
+    const headerElement = component.find('.blogHeader');
+    headerElement.simulate('click');
+    component.update();
+    const infoElement = component.find('.blogInfo');
+    expect(infoElement.length).toBe(1);
   });
 
   it('onLike handler gets triggered multiple times', () => {

@@ -5,9 +5,7 @@ const setToken = newToken => {
 };
 const blogs = [
   {
-    _id: {
-      $oid: '5b2abd62eeb6e204c389d979'
-    },
+    id: '5b2abd62eeb6e204c389d979',
     likes: 37,
     title: 'blog titlez',
     url: 'http://www.sokeri.com/ok/',
@@ -18,9 +16,7 @@ const blogs = [
     __v: 0
   },
   {
-    _id: {
-      $oid: '5b2ac866ec979f069d805c7e'
-    },
+    id: '5b2ac866ec979f069d805c7e',
     likes: 5,
     title: 'blog titlez2',
     url: 'http://www.sokeri.com/ok/',
@@ -31,9 +27,7 @@ const blogs = [
     __v: 0
   },
   {
-    _id: {
-      $oid: '5b2e3abf43d1220cadfea1de'
-    },
+    id: '5b2e3abf43d1220cadfea1de',
     likes: 4,
     title: 'bb',
     url: 'ffff',
@@ -44,22 +38,20 @@ const blogs = [
     __v: 0
   },
   {
-    _id: {
-      $oid: '5b2f824f2eea2d0eb03b118f'
-    },
+    id: '5b2f824f2eea2d0eb03b118f',
     likes: 3,
     title: 'title',
     url: 'url',
     author: 'author',
     user: {
-      $oid: '5b2ac27fb9980f052206365e'
+      id: '5b2ac27fb9980f052206365e'
     },
     __v: 0
   }
 ];
 
 const getAll = () => {
-  return Promise.resolve(blogs);
+  return Promise.resolve({ data: blogs, status: 200 });
 };
 
 export default { getAll, blogs, setToken };

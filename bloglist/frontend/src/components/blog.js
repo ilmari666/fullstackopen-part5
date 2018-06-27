@@ -44,7 +44,7 @@ class Blog extends React.Component {
         </div>
 
         <Toggleable ref={ref => (this.content = ref)}>
-          <React.Fragment>
+          <div>
             <div className="blogInfo">
               URL: <a href={url}>{url}</a> <br />
               Created by: {username} <br />
@@ -54,7 +54,7 @@ class Blog extends React.Component {
             {!user || username === this.props.loggedInUser.username ? (
               <button onClick={this.onDelete}>Delete</button>
             ) : null}
-          </React.Fragment>
+          </div>
         </Toggleable>
       </BlogWrapper>
     );
