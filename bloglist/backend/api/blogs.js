@@ -45,7 +45,7 @@ blogsRouter.post('/', async (request, response) => {
       const result = await blog.save();
       user.blogs = user.blogs.concat(blog._id);
       user.save();
-      return response.status(201).json(result);
+      return response.status(201).json(Blog.format(result));
     } catch (e) {
       if (e.name === 'JsonWebTokenError') {
         response.status(401).json({ error: e.message });
@@ -63,7 +63,7 @@ blogsRouter.put('/:id', async (request, response) => {
   try {
     const blog = await Blog.findByIdAndUpdate(id, update, { new: true });
     if (blog) {
-      return response.json(blog);
+      return response.json(Blog.format(blog));
     } else {
       return response.status(404).end();
     }
